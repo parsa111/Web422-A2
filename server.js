@@ -51,33 +51,33 @@ app.post("/api/restaurants", (req, res) => {
 
 // ===============================================
 
-// paging restaurant
 
 app.get("/api/restaurants", (req, res) => {
+    // -------------------------------------
 
-    let temp_page = req.query.page;
+    let t_page = req.query.page;
 
-    let temp_perpage = req.query.perPage;
+    let t_perpage = req.query.perPage;
 
-    let The_temp_borough = req.query.borough;
+    let t_borough = req.query.borough;
 
+    // ---------------------------------------
 
-
-    if (!/^[1-9]+$/.test(temp_page)) {
+    if (!/^[1-9]+$/.test(t_page)) {
         res.status(400).json({ message: 'Invalid page, must be number!' });
 
     }
 
     // ================================
 
-    if (!/^[1-9]+$/.test(temp_perpage)) {
+    if (!/^[1-9]+$/.test(t_perpage)) {
         res.status(400).json({ message: 'Invalid perPage, must be number!' });
 
     }
 
     // =======================================
 
-    if (!/^[a-zA-Z]+$/.test(The_temp_borough)) {
+    if (!/^[a-zA-Z]+$/.test(t_borough)) {
         res.status(400).json({ message: 'Invalid borough, must be alphabetic!' });
 
     }
@@ -85,7 +85,7 @@ app.get("/api/restaurants", (req, res) => {
 
     // =================================================================
 
-    db.getAllRestaurants(temp_page, temp_perpage, The_temp_borough)
+    db.getAllRestaurants(t_page, t_perpage, t_borough)
 
     .then((restaurants) => {
             res.status(200).json(restaurants);
@@ -143,7 +143,7 @@ app.put("/api/restaurants/:id", (req, res) => {
 
 db.initialize().then(() => {
     app.listen(HTTP_PORT, () => {
-        console.log(`server listening on: ${HTTP_PORT}`);
+        console.log(`server listen on: ${HTTP_PORT}`);
     });
 }).catch((error) => {
     console.log(error);

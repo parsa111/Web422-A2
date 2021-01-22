@@ -49,6 +49,7 @@ module.exports = class RestaurantDB {
     // ==================================================
 
     initialize() {
+
         return new Promise((resolve, reject) => {
 
             let db = mongoose.createConnection(`mongodb+srv://web422:web@12345@web422.nnafl.mongodb.net/web422?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -68,9 +69,9 @@ module.exports = class RestaurantDB {
     // ==================================================
 
     async addNewRestaurant(The_data) {
-        let newRestaurant = new this.Restaurant(The_data);
-        await newRestaurant.save();
-        return `new restaurant: ${newRestaurant._id} successfully added`
+        let The_newRestaurant = new this.Restaurant(The_data);
+        await The_newRestaurant.save();
+        return `new restaurant: ${The_newRestaurant._id} successfully added`
     }
 
     // ==========================================
