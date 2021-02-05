@@ -4,117 +4,171 @@
  *  No part of this assignment has been copied manually or electronically from any other source
  *  (including web sites) or distributed to other students.
  *
- *  Name: Parsa Parichehreh Student ID: 156794182 Date: 
+ *  Name: Parsa Parichehreh Student ID: 156794182 Date: February 5, 2021
  *
  *
  ********************************************************************************/
 
-// Variables
-let restaurantData = [];
+let current = {};
 
-let currentRestaurant = {};
+let Data = [];
 
-let page = 1;
+let perPage = 10; // perpage
 
-let perPage = 10;
+let map = null; // map == null 
 
-let map = null;
+let page = 1; // page
 
-// Average Score funtion
-const avgScore = (grades) => {
-    let sum = 0;
-    let count = 0;
-    grades.forEach((grade) => {
-        sum += grade.score;
-        count++;
-    });
-    return (sum / count).toFixed(2);
-};
 
-// Lodash template
+// =====================================================
+
 const tableRows = _.template(` 
+
 <% _.forEach(restaurants, function(restaurant) { %>
-    <tr data-id="<%= restaurant._id %>">
-    <td><%- restaurant.name %></td>
-    <td><%- restaurant.cuisine %></td>
-    <td><%- restaurant.address.building %> <%- restaurant.address.street %></td>
-    <td><%- avgScore(restaurant.grades) %></td>
-    </tr>
+   
+  <tr data-id="<%= restaurant._id %>">
+  
+  <td><%- restaurant.name %></td>
+  
+  <td><%- restaurant.cuisine %></td>
+  
+  <td><%- restaurant.address.building %> <%- restaurant.address.street %></td>
+  
+  <td><%- avg(restaurant.grades) %></td>
+  
+  </tr>
 <% }); %>
 `);
 
-// Functions
-//  // https://peaceful-oasis-15511.herokuapp.com
-//  http://web422assignment01.herokuapp.com
-// Calculates the average score, given an array of "grades" objects for a specific restaurant
+// ===========================================================================
 
-const loadRestaurantsData = async() => {
-    const res = await fetch(
-        `  http://web422assi1.herokuapp.com/api/restaurants?page=${page}&perPage=${perPage}`
-    );
-    const restaurants = await res.json();
-    // Set restaurants
-    restaurantData = restaurants;
-    // Get table template results
-    const templateRestaurants = tableRows({ restaurants: restaurants });
-    // Append tableRows
-    $('tbody').empty().append(templateRestaurants);
-    // Set Pagination
-    $('#current').text(page);
+// Average 
+
+const avg = (The_grades) => {
+
+    let SUM = 0; // sum
+
+    let COUNTS = 0; // Counts
+
+    The_grades.forEach((The_grades) => {
+
+        SUM += The_grades.score;
+
+        COUNTS++;
+
+    });
+
+    return (SUM / COUNTS).toFixed(2); // return (SUM / COUNTS).toFixed(2)
 };
 
-const setCurrentRestaurant = (id) => {
-    const restaurant = restaurantData.find((res) => res._id === id);
-    currentRestaurant = restaurant;
-    // Set Modal Title
-    $('.modal-title').text(currentRestaurant.name);
-    // Set Modal Content Address
+// ==========================================================================
+
+const set_Current_Restaurant = (id) => {
+
+    const res = Data.find((res) => res._id === id);
+
+    current = res;
+
+    $('.modal-title').text(current.name);
+
     $('#restaurant-address').text(
-        `${currentRestaurant.address.building} ${currentRestaurant.address.street}`
+
+        `${current.address.building} ${current.address.street}`
+
     );
-    // Open Modal
+
     $('#restaurant-modal').modal();
 };
 
-const handleNext = () => {
-    page++;
-    loadRestaurantsData();
+// ===========================================================
+
+const load_Restaurants_Data = async() => {
+
+    const res = await fetch(
+
+        `  http://web422assi1.herokuapp.com/api/restaurants?page=${page}&perPage=${perPage}`
+    );
+
+    const r = await res.json();
+
+    Data = r;
+
+    const template_Restaurants = tableRows({ restaurants: r });
+
+    $('tbody').empty().append(template_Restaurants);
+
+    $('#current').text(page);
 };
 
-const handlePrevious = () => {
+// =======================================================================
+
+const handlePrev = () => {
+
     if (page > 1) {
+
         page--;
-        loadRestaurantsData();
+
+        load_Restaurants_Data();
     }
 };
 
-function renderMap() {
-    const { coord } = currentRestaurant.address;
+// ===========================================================================
+
+function render_Map() {
+
+    const { coord } = current.address;
+
     map = new L.Map('leaflet', {
+
         center: [coord[1], coord[0]],
-        zoom: 18,
+
+        zoom: 19,
+
         layers: [
+
             new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
         ],
     });
     L.marker([coord[1], coord[0]]).addTo(map);
 }
 
-function deleteMap() {
+//=============================================================
+
+function delete_Map() {
+
     map.remove();
 }
 
+
+// =================================================
+
+const handle = () => {
+
+    page++;
+
+    load_Restaurants_Data();
+};
+
+
+// =============================================
+
+
 $(document).ready(() => {
-    // Load Restaurant Data
-    loadRestaurantsData();
-    // Click Event
-    $('#restaurantTable').on('click', 'tr', (event) => {
-        setCurrentRestaurant($(event.target.parentElement).attr('data-id'));
+
+    load_Restaurants_Data();
+
+    $('#restaurantTable').on('click', 'tr', (e) => {
+
+        set_Current_Restaurant($(e.target.parentElement).attr('data-id'));
     });
-    // Previous page
-    $('#previous').click(handlePrevious);
-    // Next Page
-    $('#next').click(handleNext);
-    $('#restaurant-modal').on('shown.bs.modal', renderMap);
-    $('#restaurant-modal').on('hidden.bs.modal', deleteMap);
+
+    // ----------------------------------------------------
+
+    $('#previous').click(handlePrev);
+
+    $('#next').click(handle);
+
+    $('#restaurant-modal').on('shown.bs.modal', render_Map);
+
+    $('#restaurant-modal').on('hidden.bs.modal', delete_Map);
 });

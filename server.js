@@ -5,7 +5,7 @@
  * (including web sites) or distributed to other students.
  *
  * Name: Parsa Parichehreh Student ID: 156794182  Date: 1/22/2021
- * Heroku Link: https://web422-assignment11.herokuapp.com/ 
+ * Heroku Link:  
  *
  ********************************************************************************/
 
