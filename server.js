@@ -5,7 +5,7 @@
  * (including web sites) or distributed to other students.
  *
  * Name: Parsa Parichehreh Student ID: 156794182  Date: 1/22/2021
- * Heroku Link: https://web422-assignment11.herokuapp.com/
+ * Heroku Link: https://web422-assignment11.herokuapp.com/ 
  *
  ********************************************************************************/
 
@@ -55,29 +55,29 @@ app.post("/api/restaurants", (req, res) => {
 app.get("/api/restaurants", (req, res) => {
     // -------------------------------------
 
-    let t_page = req.query.page;
+    let page = req.query.page;
 
-    let t_perpage = req.query.perPage;
+    let perpage = req.query.perPage;
 
-    let t_borough = req.query.borough;
+    let borough = req.query.borough;
 
     // ---------------------------------------
 
-    if (!/^[1-9]+$/.test(t_page)) {
+    if (!/^[1-9]+$/.test(page)) {
         res.status(400).json({ message: 'Invalid page, must be number!' });
 
     }
 
     // ================================
 
-    if (!/^[1-9]+$/.test(t_perpage)) {
+    if (!/^[1-9]+$/.test(perpage)) {
         res.status(400).json({ message: 'Invalid perPage, must be number!' });
 
     }
 
     // =======================================
 
-    if (!/^[a-zA-Z]+$/.test(t_borough)) {
+    if (!/^[a-zA-Z]+$/.test(borough)) {
         res.status(400).json({ message: 'Invalid borough, must be alphabetic!' });
 
     }
@@ -85,7 +85,7 @@ app.get("/api/restaurants", (req, res) => {
 
     // =================================================================
 
-    db.getAllRestaurants(t_page, t_perpage, t_borough)
+    db.getAllRestaurants(page, perpage, borough)
 
     .then((restaurants) => {
             res.status(200).json(restaurants);
